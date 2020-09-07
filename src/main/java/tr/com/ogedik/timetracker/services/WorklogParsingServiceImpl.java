@@ -16,30 +16,39 @@ import java.util.stream.Collectors;
 @Service
 public class WorklogParsingServiceImpl extends AbstractService implements WorklogParsingService {
 
-    private final TimeTrackerIntegrationService timeTrackerIntegrationService;
+  private final TimeTrackerIntegrationService timeTrackerIntegrationService;
 
-    public WorklogParsingServiceImpl(TimeTrackerIntegrationService timeTrackerIntegrationService) {
-        this.timeTrackerIntegrationService = timeTrackerIntegrationService;
-    }
+  public WorklogParsingServiceImpl(TimeTrackerIntegrationService timeTrackerIntegrationService) {
+    this.timeTrackerIntegrationService = timeTrackerIntegrationService;
+  }
 
-    @Override
-    public WorklogContainer retrieveWorklogs(String authenticatedUsername, String startDate, String endDate) {
-        JQLSearchResult searchResult = timeTrackerIntegrationService.getJQLSearchResult(authenticatedUsername,startDate, endDate);
+  @Override
+  public WorklogContainer retrieveWorklogs(
+      String authenticatedUsername, String startDate, String endDate) {
+    JQLSearchResult searchResult =
+        timeTrackerIntegrationService.getJQLSearchResult(authenticatedUsername, startDate, endDate);
 
-        WorklogContainer worklogContainer = new WorklogContainer();
+    WorklogContainer worklogContainer = new WorklogContainer();
 
-        searchResult.getIssues().forEach(issue -> {
-                    String issueKey = issue.getKey();
-                    String issueSummary = issue.getFields().getSummary();
-                    worklogContainer.addWorklogs(issue.getFields().getWorklog().getWorklogs().stream()
-                            .map(worklogRecord -> new JTTWorklog(issueKey, issueSummary,
-                                    worklogRecord.getComment(), DateUtils.convertWorklogDateString(worklogRecord.getStarted()),
-                                    worklogRecord.getTimeSpent()))
-                            .collect(Collectors.toList()));
-                }
-        );
-        return worklogContainer;
-    }
-
-
+    searchResult
+        .getIssues()
+        .forEach(
+            issue -> {
+              String issueKey = issue.getKey();
+              String issueSummary = issue.getFields().getSummary();
+              worklogContainer.addWorklogs(
+                  issue.getFields().getWorklog().getWorklogs().stream()
+                      .map(
+                          worklogRecord ->
+                              new JTTWorklog(
+                                  worklogRecord.getAuthor(),
+                                  issueKey,
+                                  issueSummary,
+                                  worklogRecord.getComment(),
+                                  DateUtils.convertWorklogDateString(worklogRecord.getStarted()),
+                                  worklogRecord.getTimeSpent()))
+                      .collect(Collectors.toList()));
+            });
+    return worklogContainer;
+  }
 }
