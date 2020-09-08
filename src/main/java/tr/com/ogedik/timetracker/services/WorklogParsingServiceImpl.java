@@ -38,6 +38,8 @@ public class WorklogParsingServiceImpl extends AbstractService implements Worklo
               String issueSummary = issue.getFields().getSummary();
               worklogContainer.addWorklogs(
                   issue.getFields().getWorklog().getWorklogs().stream()
+                      .filter(
+                          worklogRecord -> DateUtils.isBetween(worklogRecord, startDate, endDate))
                       .map(
                           worklogRecord ->
                               new JTTWorklog(
