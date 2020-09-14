@@ -36,10 +36,12 @@ public class WorklogParsingServiceImpl extends AbstractService implements Worklo
             issue -> {
               String issueKey = issue.getKey();
               String issueSummary = issue.getFields().getSummary();
+              // TODO: Check by user key
               worklogContainer.addWorklogs(
                   issue.getFields().getWorklog().getWorklogs().stream()
                       .filter(
-                          worklogRecord -> DateUtils.isBetween(worklogRecord, startDate, endDate))
+                          worklogRecord -> DateUtils.isBetween(worklogRecord, startDate, endDate) &&
+                                  worklogRecord.getAuthor().getName().equals(authenticatedUsername))
                       .map(
                           worklogRecord ->
                               new JTTWorklog(

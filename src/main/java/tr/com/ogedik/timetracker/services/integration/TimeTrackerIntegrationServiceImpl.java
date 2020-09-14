@@ -17,7 +17,6 @@ import tr.com.ogedik.commons.util.MapUtils;
 @Service
 public class TimeTrackerIntegrationServiceImpl extends AbstractService implements TimeTrackerIntegrationService {
 
-
     @Override
     public JQLSearchResult getJQLSearchResult(String username, String startDate, String endDate) {
 
