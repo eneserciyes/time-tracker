@@ -22,4 +22,5 @@ public class JTTWorklog {
       private String worklogExplanation;
       private Date started;
       private String timeSpent;
+      private int timeSpentSeconds;
 }
