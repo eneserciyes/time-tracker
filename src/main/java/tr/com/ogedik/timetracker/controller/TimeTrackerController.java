@@ -11,7 +11,6 @@ import tr.com.ogedik.commons.rest.response.AbstractResponse;
 import tr.com.ogedik.timetracker.model.JTTWorklog;
 import tr.com.ogedik.timetracker.services.WorklogService;
 import tr.com.ogedik.timetracker.services.WorklogServiceImpl;
-import tr.com.ogedik.timetracker.services.integration.TimeTrackerIntegrationService;
 
 import javax.validation.Valid;
 
@@ -35,11 +34,12 @@ public class TimeTrackerController extends AbstractController {
   public AbstractResponse getWorklogs(
       @RequestHeader(value = Headers.AUTH_USER) String authenticatedUsername,
       @RequestParam String startDate,
-      @RequestParam String endDate) {
+      @RequestParam String endDate,
+      @RequestParam String isUserOnly) {
     logger.info(
         "worklogs for {} between {} and {} requested", authenticatedUsername, startDate, endDate);
     return AbstractResponse.build(
-        worklogService.retrieveWorklogs(authenticatedUsername, startDate, endDate));
+        worklogService.retrieveWorklogs(authenticatedUsername, startDate, endDate, isUserOnly));
   }
 
   @PostMapping(Services.Path.WORKLOGS)
