@@ -9,6 +9,7 @@ import tr.com.ogedik.commons.constants.Services;
 import tr.com.ogedik.commons.rest.AbstractController;
 import tr.com.ogedik.commons.rest.response.AbstractResponse;
 import tr.com.ogedik.timetracker.model.JTTWorklog;
+import tr.com.ogedik.timetracker.services.TeamReportsService;
 import tr.com.ogedik.timetracker.services.WorklogService;
 import tr.com.ogedik.timetracker.services.WorklogServiceImpl;
 
@@ -23,11 +24,13 @@ import javax.validation.Valid;
 public class TimeTrackerController extends AbstractController {
 
   private final WorklogService worklogService;
+  private final TeamReportsService teamReportsService;
 
   private static final Logger logger = LogManager.getLogger(TimeTrackerController.class);
 
-  public TimeTrackerController(WorklogServiceImpl worklogService) {
+  public TimeTrackerController(WorklogServiceImpl worklogService, TeamReportsService teamReportsService) {
     this.worklogService = worklogService;
+    this.teamReportsService = teamReportsService;
   }
 
   @GetMapping(Services.Path.WORKLOGS)
@@ -40,6 +43,11 @@ public class TimeTrackerController extends AbstractController {
         "worklogs for {} between {} and {} requested", authenticatedUsername, startDate, endDate);
     return AbstractResponse.build(
         worklogService.retrieveWorklogs(authenticatedUsername, startDate, endDate, isUserOnly));
+  }
+
+  @GetMapping(Services.Path.ISSUES_IN_SPRINT)
+  public AbstractResponse getIssuesInSprint(@RequestParam String sprintCode){
+      return AbstractResponse.build(teamReportsService.getIssuesDataBySprintCode(sprintCode));
   }
 
   @PostMapping(Services.Path.WORKLOGS)

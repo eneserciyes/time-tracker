@@ -19,7 +19,7 @@ public class TimeTrackerIntegrationServiceImpl extends AbstractService
     implements TimeTrackerIntegrationService {
 
   @Override
-  public JQLSearchResult getJQLSearchResult(String username, String startDate, String endDate) {
+  public JQLSearchResult getWorklogSearchResult(String username, String startDate, String endDate) {
 
     RequestURLDetails requestURLDetails =
         generateRequestInfo(
@@ -34,13 +34,25 @@ public class TimeTrackerIntegrationServiceImpl extends AbstractService
   }
 
   @Override
+  public JQLSearchResult getIssuesInASprintSearchResult(String sprintCode, String fields) {
+    RequestURLDetails requestURLDetails =
+        generateRequestInfo(
+            Services.INTEGRATION,
+            Services.Path.ISSUES_IN_SPRINT,
+            MapUtils.of("sprintCode", sprintCode, "fields", fields));
+    RestResponse<JQLSearchResult> searchResultResponse =
+        HttpRestClient.doGet(requestURLDetails, JQLSearchResult.class);
+    return resolve(searchResultResponse);
+  }
+
+  @Override
   public Boolean createWorklog(CreateWorklogRequest createWorklogRequest) {
     RequestURLDetails requestURLDetails =
         generateRequestInfo(Services.INTEGRATION, Services.Path.CREATE_LOG, null);
 
-    RestResponse<Boolean> response = HttpRestClient.doPost(requestURLDetails, createWorklogRequest, Boolean.class);
+    RestResponse<Boolean> response =
+        HttpRestClient.doPost(requestURLDetails, createWorklogRequest, Boolean.class);
 
     return resolve(response);
-
   }
 }

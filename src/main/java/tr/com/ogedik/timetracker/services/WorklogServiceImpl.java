@@ -26,7 +26,7 @@ public class WorklogServiceImpl extends AbstractService implements WorklogServic
   public WorklogContainer retrieveWorklogs(
       String authenticatedUsername, String startDate, String endDate, String isUserOnly) {
     JQLSearchResult searchResult =
-        timeTrackerIntegrationService.getJQLSearchResult(authenticatedUsername, startDate, endDate);
+        timeTrackerIntegrationService.getWorklogSearchResult(authenticatedUsername, startDate, endDate);
 
     WorklogContainer worklogContainer = new WorklogContainer();
 
