@@ -56,6 +56,11 @@ public class TimeTrackerController extends AbstractController {
     return AbstractResponse.build(teamReportsService.getAllBoards());
   }
 
+  @GetMapping(Services.Path.SPRINTS)
+  public AbstractResponse getSprintsInABoard(@RequestParam String boardId) {
+    return AbstractResponse.build(teamReportsService.getSprintsInABoard(boardId));
+  }
+
   @PostMapping(Services.Path.WORKLOGS)
   public AbstractResponse createWorklog(@Valid @RequestBody JTTWorklog worklog) {
     logger.info("Worklog creation for {} requested", worklog.getIssueKey());

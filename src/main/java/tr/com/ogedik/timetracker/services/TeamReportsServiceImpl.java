@@ -6,6 +6,7 @@ import tr.com.ogedik.commons.constants.IssueFields;
 import tr.com.ogedik.commons.expection.ErrorException;
 import tr.com.ogedik.commons.expection.constants.CommonErrorType;
 import tr.com.ogedik.commons.rest.response.BoardsResponse;
+import tr.com.ogedik.commons.rest.response.SprintResponse;
 import tr.com.ogedik.commons.rest.response.model.Issue;
 import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 import tr.com.ogedik.commons.rest.response.model.Sprint;
@@ -48,6 +49,11 @@ public class TeamReportsServiceImpl implements TeamReportsService {
   @Override
   public BoardsResponse getAllBoards() {
     return timeTrackerIntegrationService.getAllBoards();
+  }
+
+  @Override
+  public SprintResponse getSprintsInABoard(String boardId) {
+    return timeTrackerIntegrationService.getSprintsInABoard(boardId);
   }
 
   private List<TeamReportsIssue> getIssuesInASprint(JQLSearchResult searchResult) {
