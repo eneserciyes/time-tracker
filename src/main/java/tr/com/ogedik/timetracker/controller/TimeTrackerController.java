@@ -28,7 +28,8 @@ public class TimeTrackerController extends AbstractController {
 
   private static final Logger logger = LogManager.getLogger(TimeTrackerController.class);
 
-  public TimeTrackerController(WorklogServiceImpl worklogService, TeamReportsService teamReportsService) {
+  public TimeTrackerController(
+      WorklogServiceImpl worklogService, TeamReportsService teamReportsService) {
     this.worklogService = worklogService;
     this.teamReportsService = teamReportsService;
   }
@@ -46,8 +47,13 @@ public class TimeTrackerController extends AbstractController {
   }
 
   @GetMapping(Services.Path.ISSUES_IN_SPRINT)
-  public AbstractResponse getIssuesInSprint(@RequestParam String sprintCode){
-      return AbstractResponse.build(teamReportsService.getIssuesDataBySprintCode(sprintCode));
+  public AbstractResponse getIssuesInSprint(@RequestParam String sprintCode) {
+    return AbstractResponse.build(teamReportsService.getIssuesDataBySprintCode(sprintCode));
+  }
+
+  @GetMapping(Services.Path.BOARDS)
+  public AbstractResponse getAllBoards() {
+    return AbstractResponse.build(teamReportsService.getAllBoards());
   }
 
   @PostMapping(Services.Path.WORKLOGS)

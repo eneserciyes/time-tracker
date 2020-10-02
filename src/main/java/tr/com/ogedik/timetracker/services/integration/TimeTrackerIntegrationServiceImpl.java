@@ -10,6 +10,7 @@ import tr.com.ogedik.commons.constants.Services;
 import tr.com.ogedik.commons.rest.request.client.HttpRestClient;
 import tr.com.ogedik.commons.rest.request.client.helper.RequestURLDetails;
 import tr.com.ogedik.commons.rest.request.model.CreateWorklogRequest;
+import tr.com.ogedik.commons.rest.response.BoardsResponse;
 import tr.com.ogedik.commons.rest.response.RestResponse;
 import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 import tr.com.ogedik.commons.util.MapUtils;
@@ -43,6 +44,14 @@ public class TimeTrackerIntegrationServiceImpl extends AbstractService
     RestResponse<JQLSearchResult> searchResultResponse =
         HttpRestClient.doGet(requestURLDetails, JQLSearchResult.class);
     return resolve(searchResultResponse);
+  }
+
+  @Override
+  public BoardsResponse getAllBoards() {
+    RequestURLDetails requestURLDetails =
+        generateRequestInfo(Services.INTEGRATION, Services.Path.BOARDS, null);
+    RestResponse<BoardsResponse> response = HttpRestClient.doGet(requestURLDetails, BoardsResponse.class);
+    return resolve(response);
   }
 
   @Override

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tr.com.ogedik.commons.constants.IssueFields;
 import tr.com.ogedik.commons.expection.ErrorException;
 import tr.com.ogedik.commons.expection.constants.CommonErrorType;
+import tr.com.ogedik.commons.rest.response.BoardsResponse;
 import tr.com.ogedik.commons.rest.response.model.Issue;
 import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 import tr.com.ogedik.commons.rest.response.model.Sprint;
@@ -42,6 +43,11 @@ public class TeamReportsServiceImpl implements TeamReportsService {
         .issues(getIssuesInASprint(searchResult))
         .data(getWorklogDoughnutChartData(searchResult))
         .build();
+  }
+
+  @Override
+  public BoardsResponse getAllBoards() {
+    return timeTrackerIntegrationService.getAllBoards();
   }
 
   private List<TeamReportsIssue> getIssuesInASprint(JQLSearchResult searchResult) {
