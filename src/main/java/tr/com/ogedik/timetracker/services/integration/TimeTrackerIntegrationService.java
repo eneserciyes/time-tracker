@@ -8,8 +8,9 @@ import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 public interface TimeTrackerIntegrationService {
 
     JQLSearchResult getWorklogSearchResult(String username, String startDate, String endDate);
-    Boolean createWorklog(CreateWorklogRequest worklog);
+    JQLSearchResult getRecentIssues();
     JQLSearchResult getIssuesInASprintSearchResult(String sprintCode, String fields);
+    Boolean createWorklog(CreateWorklogRequest worklog);
     BoardsResponse getAllBoards();
     SprintResponse getSprintsInABoard(String boardId);
 }

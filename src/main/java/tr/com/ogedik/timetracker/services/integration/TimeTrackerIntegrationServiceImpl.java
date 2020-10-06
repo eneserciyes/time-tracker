@@ -36,6 +36,16 @@ public class TimeTrackerIntegrationServiceImpl extends AbstractService
   }
 
   @Override
+  public JQLSearchResult getRecentIssues() {
+    RequestURLDetails requestURLDetails =
+        generateRequestInfo(Services.INTEGRATION, Services.Path.ISSUES, null);
+
+    RestResponse<JQLSearchResult> searchResultResponse = HttpRestClient.doGet(requestURLDetails, JQLSearchResult.class);
+
+    return resolve(searchResultResponse);
+  }
+
+  @Override
   public JQLSearchResult getIssuesInASprintSearchResult(String sprintCode, String fields) {
     RequestURLDetails requestURLDetails =
         generateRequestInfo(
@@ -51,15 +61,18 @@ public class TimeTrackerIntegrationServiceImpl extends AbstractService
   public BoardsResponse getAllBoards() {
     RequestURLDetails requestURLDetails =
         generateRequestInfo(Services.INTEGRATION, Services.Path.BOARDS, null);
-    RestResponse<BoardsResponse> response = HttpRestClient.doGet(requestURLDetails, BoardsResponse.class);
+    RestResponse<BoardsResponse> response =
+        HttpRestClient.doGet(requestURLDetails, BoardsResponse.class);
     return resolve(response);
   }
 
   @Override
   public SprintResponse getSprintsInABoard(String boardId) {
     RequestURLDetails requestURLDetails =
-            generateRequestInfo(Services.INTEGRATION, Services.Path.SPRINTS, MapUtils.of("boardId", boardId));
-    RestResponse<SprintResponse> response = HttpRestClient.doGet(requestURLDetails, SprintResponse.class);
+        generateRequestInfo(
+            Services.INTEGRATION, Services.Path.SPRINTS, MapUtils.of("boardId", boardId));
+    RestResponse<SprintResponse> response =
+        HttpRestClient.doGet(requestURLDetails, SprintResponse.class);
     return resolve(response);
   }
 
