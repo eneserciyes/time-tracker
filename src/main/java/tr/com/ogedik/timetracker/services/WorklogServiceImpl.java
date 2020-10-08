@@ -76,6 +76,7 @@ public class WorklogServiceImpl extends AbstractService implements WorklogServic
 
   private CreateUpdateWorklogRequest convertWorklogToRequest(JTTWorklog worklog) {
     return CreateUpdateWorklogRequest.builder()
+        .id(worklog.getId())
         .issueKey(worklog.getIssueKey())
         .comment(worklog.getWorklogExplanation())
         .started(worklog.getStarted())
