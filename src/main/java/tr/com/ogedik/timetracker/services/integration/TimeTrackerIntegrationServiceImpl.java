@@ -9,7 +9,7 @@ import tr.com.ogedik.commons.abstraction.AbstractService;
 import tr.com.ogedik.commons.constants.Services;
 import tr.com.ogedik.commons.rest.request.client.HttpRestClient;
 import tr.com.ogedik.commons.rest.request.client.helper.RequestURLDetails;
-import tr.com.ogedik.commons.rest.request.model.CreateWorklogRequest;
+import tr.com.ogedik.commons.rest.request.model.CreateUpdateWorklogRequest;
 import tr.com.ogedik.commons.rest.response.BoardsResponse;
 import tr.com.ogedik.commons.rest.response.RestResponse;
 import tr.com.ogedik.commons.rest.response.SprintResponse;
@@ -40,7 +40,8 @@ public class TimeTrackerIntegrationServiceImpl extends AbstractService
     RequestURLDetails requestURLDetails =
         generateRequestInfo(Services.INTEGRATION, Services.Path.ISSUES, null);
 
-    RestResponse<JQLSearchResult> searchResultResponse = HttpRestClient.doGet(requestURLDetails, JQLSearchResult.class);
+    RestResponse<JQLSearchResult> searchResultResponse =
+        HttpRestClient.doGet(requestURLDetails, JQLSearchResult.class);
 
     return resolve(searchResultResponse);
   }
@@ -77,9 +78,20 @@ public class TimeTrackerIntegrationServiceImpl extends AbstractService
   }
 
   @Override
-  public Boolean createWorklog(CreateWorklogRequest createWorklogRequest) {
+  public Boolean updateWorklog(CreateUpdateWorklogRequest updateWorklogRequest) {
     RequestURLDetails requestURLDetails =
-        generateRequestInfo(Services.INTEGRATION, Services.Path.CREATE_LOG, null);
+        generateRequestInfo(Services.INTEGRATION, Services.Path.WORKLOG, null);
+
+    RestResponse<Boolean> response =
+        HttpRestClient.doPut(requestURLDetails, updateWorklogRequest, Boolean.class);
+
+    return resolve(response);
+  }
+
+  @Override
+  public Boolean createWorklog(CreateUpdateWorklogRequest createWorklogRequest) {
+    RequestURLDetails requestURLDetails =
+        generateRequestInfo(Services.INTEGRATION, Services.Path.WORKLOG, null);
 
     RestResponse<Boolean> response =
         HttpRestClient.doPost(requestURLDetails, createWorklogRequest, Boolean.class);

@@ -2,7 +2,7 @@ package tr.com.ogedik.timetracker.services;
 
 import org.springframework.stereotype.Service;
 import tr.com.ogedik.commons.abstraction.AbstractService;
-import tr.com.ogedik.commons.rest.request.model.CreateWorklogRequest;
+import tr.com.ogedik.commons.rest.request.model.CreateUpdateWorklogRequest;
 import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 import tr.com.ogedik.commons.util.DateUtils;
 import tr.com.ogedik.timetracker.model.JTTWorklog;
@@ -66,13 +66,20 @@ public class WorklogServiceImpl extends AbstractService implements WorklogServic
 
   @Override
   public Boolean createWorklog(JTTWorklog worklog) {
-    CreateWorklogRequest createWorklogRequest =
-        CreateWorklogRequest.builder()
-            .issueKey(worklog.getIssueKey())
-            .comment(worklog.getWorklogExplanation())
-            .started(worklog.getStarted())
-            .timeSpentSeconds(worklog.getTimeSpentSeconds())
-            .build();
-    return timeTrackerIntegrationService.createWorklog(createWorklogRequest);
+    return timeTrackerIntegrationService.createWorklog(convertWorklogToRequest(worklog));
+  }
+
+  @Override
+  public Boolean updateWorklog(JTTWorklog worklog) {
+    return timeTrackerIntegrationService.updateWorklog(convertWorklogToRequest(worklog));
+  }
+
+  private CreateUpdateWorklogRequest convertWorklogToRequest(JTTWorklog worklog) {
+    return CreateUpdateWorklogRequest.builder()
+        .issueKey(worklog.getIssueKey())
+        .comment(worklog.getWorklogExplanation())
+        .started(worklog.getStarted())
+        .timeSpentSeconds(worklog.getTimeSpentSeconds())
+        .build();
   }
 }

@@ -55,12 +55,11 @@ public class TimeTrackerController extends AbstractController {
     return AbstractResponse.build(worklogService.createWorklog(worklog));
   }
 
-  // TODO: Add worklog
-  /*@PutMapping(Services.Path.WORKLOGS)
+  @PutMapping(Services.Path.WORKLOGS)
   public AbstractResponse updateWorklog(@Valid @RequestBody JTTWorklog worklog) {
     return AbstractResponse.build(worklogService.updateWorklog(worklog));
 
-  }*/
+  }
   @GetMapping(Services.Path.ISSUES_IN_SPRINT)
   public AbstractResponse getIssuesInSprint(@RequestParam String sprintCode) {
     return AbstractResponse.build(teamReportsService.getIssuesDataBySprintCode(sprintCode));
