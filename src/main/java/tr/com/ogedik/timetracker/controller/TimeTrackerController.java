@@ -49,6 +49,18 @@ public class TimeTrackerController extends AbstractController {
         worklogService.retrieveWorklogs(authenticatedUsername, startDate, endDate, isUserOnly));
   }
 
+  @PostMapping(Services.Path.WORKLOGS)
+  public AbstractResponse createWorklog(@Valid @RequestBody JTTWorklog worklog) {
+    logger.info("Worklog creation for {} requested", worklog.getIssueKey());
+    return AbstractResponse.build(worklogService.createWorklog(worklog));
+  }
+
+  // TODO: Add worklog
+  /*@PutMapping(Services.Path.WORKLOGS)
+  public AbstractResponse updateWorklog(@Valid @RequestBody JTTWorklog worklog) {
+    return AbstractResponse.build(worklogService.updateWorklog(worklog));
+
+  }*/
   @GetMapping(Services.Path.ISSUES_IN_SPRINT)
   public AbstractResponse getIssuesInSprint(@RequestParam String sprintCode) {
     return AbstractResponse.build(teamReportsService.getIssuesDataBySprintCode(sprintCode));
@@ -69,9 +81,4 @@ public class TimeTrackerController extends AbstractController {
     return AbstractResponse.build(timeTrackerIntegrationService.getRecentIssues());
   }
 
-  @PostMapping(Services.Path.WORKLOGS)
-  public AbstractResponse createWorklog(@Valid @RequestBody JTTWorklog worklog) {
-    logger.info("Worklog creation for {} requested", worklog.getIssueKey());
-    return AbstractResponse.build(worklogService.createWorklog(worklog));
-  }
 }
