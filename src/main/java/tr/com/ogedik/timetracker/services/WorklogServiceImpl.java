@@ -2,7 +2,7 @@ package tr.com.ogedik.timetracker.services;
 
 import org.springframework.stereotype.Service;
 import tr.com.ogedik.commons.abstraction.AbstractService;
-import tr.com.ogedik.commons.rest.request.model.CreateWorklogRequest;
+import tr.com.ogedik.commons.rest.request.model.CreateUpdateWorklogRequest;
 import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 import tr.com.ogedik.commons.util.DateUtils;
 import tr.com.ogedik.timetracker.model.JTTWorklog;
@@ -16,19 +16,20 @@ import java.util.stream.Collectors;
  */
 @Service
 public class WorklogServiceImpl extends AbstractService implements WorklogService {
-    private final TimeTrackerIntegrationService timeTrackerIntegrationService;
+  private final TimeTrackerIntegrationService timeTrackerIntegrationService;
 
-    public WorklogServiceImpl(TimeTrackerIntegrationService timeTrackerIntegrationService) {
-       this.timeTrackerIntegrationService = timeTrackerIntegrationService;
-    }
+  public WorklogServiceImpl(TimeTrackerIntegrationService timeTrackerIntegrationService) {
+    this.timeTrackerIntegrationService = timeTrackerIntegrationService;
+  }
 
-    @Override
-    public WorklogContainer retrieveWorklogs(
-        String authenticatedUsername, String startDate, String endDate) {
-        JQLSearchResult searchResult =
-            timeTrackerIntegrationService.getJQLSearchResult(authenticatedUsername, startDate, endDate);
+  @Override
+  public WorklogContainer retrieveWorklogs(
+      String authenticatedUsername, String startDate, String endDate, String isUserOnly) {
+    JQLSearchResult searchResult =
+        timeTrackerIntegrationService.getWorklogSearchResult(
+            authenticatedUsername, startDate, endDate);
 
-        WorklogContainer worklogContainer = new WorklogContainer();
+    WorklogContainer worklogContainer = new WorklogContainer();
 
     searchResult
         .getIssues()
@@ -40,15 +41,17 @@ public class WorklogServiceImpl extends AbstractService implements WorklogServic
               worklogContainer.addWorklogs(
                   issue.getFields().getWorklog().getWorklogs().stream()
                       .filter(
-                          worklogRecord ->(
-                              DateUtils.isBetween(worklogRecord, startDate, endDate)
-                                  && worklogRecord
-                                      .getAuthor()
-                                      .getName()
-                                      .equals(authenticatedUsername)))
+                          worklogRecord ->
+                              (DateUtils.isBetween(worklogRecord, startDate, endDate)
+                                  && (isUserOnly.equals("false")
+                                      || worklogRecord
+                                          .getAuthor()
+                                          .getName()
+                                          .equals(authenticatedUsername))))
                       .map(
                           worklogRecord ->
                               new JTTWorklog(
+                                  worklogRecord.getId(),
                                   worklogRecord.getAuthor(),
                                   issueKey,
                                   issueSummary,
@@ -58,15 +61,26 @@ public class WorklogServiceImpl extends AbstractService implements WorklogServic
                                   worklogRecord.getTimeSpentSeconds()))
                       .collect(Collectors.toList()));
             });
-        return worklogContainer;
-      }
+    return worklogContainer;
+  }
 
-    @Override
-    public Boolean createWorklog(JTTWorklog worklog) {
-        CreateWorklogRequest createWorklogRequest = CreateWorklogRequest.builder().issueKey(worklog.getIssueKey())
-                .comment(worklog.getWorklogExplanation())
-                .started(worklog.getStarted())
-                .timeSpentSeconds(worklog.getTimeSpentSeconds()).build();
-        return timeTrackerIntegrationService.createWorklog(createWorklogRequest);
-    }
+  @Override
+  public Boolean createWorklog(JTTWorklog worklog) {
+    return timeTrackerIntegrationService.createWorklog(convertWorklogToRequest(worklog));
+  }
+
+  @Override
+  public Boolean updateWorklog(JTTWorklog worklog) {
+    return timeTrackerIntegrationService.updateWorklog(convertWorklogToRequest(worklog));
+  }
+
+  private CreateUpdateWorklogRequest convertWorklogToRequest(JTTWorklog worklog) {
+    return CreateUpdateWorklogRequest.builder()
+        .id(worklog.getId())
+        .issueKey(worklog.getIssueKey())
+        .comment(worklog.getWorklogExplanation())
+        .started(worklog.getStarted())
+        .timeSpentSeconds(worklog.getTimeSpentSeconds())
+        .build();
+  }
 }

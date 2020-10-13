@@ -16,6 +16,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JTTWorklog {
+      private long id;
       private JiraUser author;
       private String issueKey;
       private String issueSummary;
