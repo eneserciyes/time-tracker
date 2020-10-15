@@ -1,6 +1,7 @@
 package tr.com.ogedik.timetracker.services;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tr.com.ogedik.commons.constants.IssueFields;
 import tr.com.ogedik.commons.expection.ErrorException;
@@ -12,11 +13,11 @@ import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 import tr.com.ogedik.commons.rest.response.model.Sprint;
 import tr.com.ogedik.commons.rest.response.model.WorklogRecord;
 import tr.com.ogedik.commons.util.DateUtils;
+import tr.com.ogedik.scrumier.proxy.clients.IntegrationProxy;
 import tr.com.ogedik.timetracker.TimeTrackerUtil;
 import tr.com.ogedik.timetracker.model.TeamReportsIssue;
 import tr.com.ogedik.timetracker.model.TeamReportsIssuesData;
 import tr.com.ogedik.timetracker.model.WorklogDoughnutChartData;
-import tr.com.ogedik.timetracker.services.integration.TimeTrackerIntegrationService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,19 +26,17 @@ import java.util.stream.Collectors;
  * @author enes.erciyes
  */
 @Service
-public class TeamReportsServiceImpl implements TeamReportsService {
-  private final TimeTrackerIntegrationService timeTrackerIntegrationService;
+public class DataRetrievalServiceImpl implements DataRetrievalService {
 
-  public TeamReportsServiceImpl(TimeTrackerIntegrationService timeTrackerIntegrationService) {
-    this.timeTrackerIntegrationService = timeTrackerIntegrationService;
-  }
+  @Autowired
+  IntegrationProxy integrationProxy;
 
   @Override
-  public TeamReportsIssuesData getIssuesDataBySprintCode(String sprintCode) {
+  public TeamReportsIssuesData getTeamReportsData(String sprintCode) {
     if (!StringUtils.isNumeric(sprintCode)) throw new ErrorException(CommonErrorType.INVALID_INPUT);
 
     JQLSearchResult searchResult =
-        timeTrackerIntegrationService.getIssuesInASprintSearchResult(
+        integrationProxy.getIssuesInASprint(
             sprintCode,
             String.join(",", IssueFields.WORKLOG, IssueFields.SPRINT, IssueFields.ASSIGNEE, IssueFields.SUMMARY));
     return TeamReportsIssuesData.builder()
@@ -48,12 +47,17 @@ public class TeamReportsServiceImpl implements TeamReportsService {
 
   @Override
   public BoardsResponse getAllBoards() {
-    return timeTrackerIntegrationService.getAllBoards();
+    return integrationProxy.getAllBoards();
   }
 
   @Override
   public SprintResponse getSprintsInABoard(String boardId) {
-    return timeTrackerIntegrationService.getSprintsInABoard(boardId);
+    return integrationProxy.getSprintsInABoard(boardId);
+  }
+
+  @Override
+  public JQLSearchResult getRecentIssues() {
+    return integrationProxy.getRecentIssues();
   }
 
   private List<TeamReportsIssue> getIssuesInASprint(JQLSearchResult searchResult) {

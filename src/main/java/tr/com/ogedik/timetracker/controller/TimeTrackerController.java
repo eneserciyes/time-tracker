@@ -2,6 +2,7 @@ package tr.com.ogedik.timetracker.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import tr.com.ogedik.commons.constants.Headers;
@@ -9,10 +10,8 @@ import tr.com.ogedik.commons.constants.Services;
 import tr.com.ogedik.commons.rest.AbstractController;
 import tr.com.ogedik.commons.rest.response.AbstractResponse;
 import tr.com.ogedik.timetracker.model.JTTWorklog;
-import tr.com.ogedik.timetracker.services.TeamReportsService;
+import tr.com.ogedik.timetracker.services.DataRetrievalService;
 import tr.com.ogedik.timetracker.services.WorklogService;
-import tr.com.ogedik.timetracker.services.WorklogServiceImpl;
-import tr.com.ogedik.timetracker.services.integration.TimeTrackerIntegrationService;
 
 import javax.validation.Valid;
 
@@ -24,18 +23,13 @@ import javax.validation.Valid;
 @Controller
 public class TimeTrackerController extends AbstractController {
 
-  private final WorklogService worklogService;
-  private final TeamReportsService teamReportsService;
-  private final TimeTrackerIntegrationService timeTrackerIntegrationService;
+  @Autowired
+  private WorklogService worklogService;
+  @Autowired
+  private DataRetrievalService dataRetrievalService;
 
   private static final Logger logger = LogManager.getLogger(TimeTrackerController.class);
 
-  public TimeTrackerController(
-          WorklogServiceImpl worklogService, TeamReportsService teamReportsService, TimeTrackerIntegrationService timeTrackerIntegrationService) {
-    this.worklogService = worklogService;
-    this.teamReportsService = teamReportsService;
-    this.timeTrackerIntegrationService = timeTrackerIntegrationService;
-  }
 
   @GetMapping(Services.Path.WORKLOGS)
   public AbstractResponse getWorklogs(
@@ -62,22 +56,22 @@ public class TimeTrackerController extends AbstractController {
   }
   @GetMapping(Services.Path.ISSUES_IN_SPRINT)
   public AbstractResponse getIssuesInSprint(@RequestParam String sprintCode) {
-    return AbstractResponse.build(teamReportsService.getIssuesDataBySprintCode(sprintCode));
+    return AbstractResponse.build(dataRetrievalService.getTeamReportsData(sprintCode));
   }
 
   @GetMapping(Services.Path.BOARDS)
   public AbstractResponse getAllBoards() {
-    return AbstractResponse.build(teamReportsService.getAllBoards());
+    return AbstractResponse.build(dataRetrievalService.getAllBoards());
   }
 
   @GetMapping(Services.Path.SPRINTS)
   public AbstractResponse getSprintsInABoard(@RequestParam String boardId) {
-    return AbstractResponse.build(teamReportsService.getSprintsInABoard(boardId));
+    return AbstractResponse.build(dataRetrievalService.getSprintsInABoard(boardId));
   }
 
   @GetMapping(Services.Path.ISSUES)
   public AbstractResponse getRecentIssues() {
-    return AbstractResponse.build(timeTrackerIntegrationService.getRecentIssues());
+    return AbstractResponse.build(dataRetrievalService.getRecentIssues());
   }
 
 }
