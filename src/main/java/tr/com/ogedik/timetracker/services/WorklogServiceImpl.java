@@ -17,14 +17,13 @@ import java.util.stream.Collectors;
 @Service
 public class WorklogServiceImpl implements WorklogService {
 
-  @Autowired
-  private IntegrationProxy integrationProxy;
+  @Autowired private IntegrationProxy integrationProxy;
 
   @Override
   public WorklogContainer retrieveWorklogs(
       String authenticatedUsername, String startDate, String endDate, String isUserOnly) {
     JQLSearchResult searchResult =
-       integrationProxy.getIssuesWithWorklogs(authenticatedUsername, startDate, endDate);
+        integrationProxy.getIssuesWithWorklogs(authenticatedUsername, startDate, endDate);
 
     WorklogContainer worklogContainer = new WorklogContainer();
 

@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients("tr.com.ogedik.scrumier.proxy.clients")
 public class TimeTrackerApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(TimeTrackerApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(TimeTrackerApplication.class, args);
+  }
 }

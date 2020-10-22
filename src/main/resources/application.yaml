@@ -1,0 +1,13 @@
+server:
+  port: 8095
+
+spring:
+  application:
+    name: time-tracker
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    service-url:
+      defaultZone: http://${DISCOVERY_SERVER_HOST:localhost}:${DISCOVERY_SERVER_PORT:8761}/eureka

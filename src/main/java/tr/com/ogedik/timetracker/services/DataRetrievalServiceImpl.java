@@ -28,8 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class DataRetrievalServiceImpl implements DataRetrievalService {
 
-  @Autowired
-  IntegrationProxy integrationProxy;
+  @Autowired IntegrationProxy integrationProxy;
 
   @Override
   public TeamReportsIssuesData getTeamReportsData(String sprintCode) {
@@ -38,7 +37,12 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
     JQLSearchResult searchResult =
         integrationProxy.getIssuesInASprint(
             sprintCode,
-            String.join(",", IssueFields.WORKLOG, IssueFields.SPRINT, IssueFields.ASSIGNEE, IssueFields.SUMMARY));
+            String.join(
+                ",",
+                IssueFields.WORKLOG,
+                IssueFields.SPRINT,
+                IssueFields.ASSIGNEE,
+                IssueFields.SUMMARY));
     return TeamReportsIssuesData.builder()
         .issues(getIssuesInASprint(searchResult))
         .data(getWorklogDoughnutChartData(searchResult))

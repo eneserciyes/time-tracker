@@ -16,12 +16,12 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JTTWorklog {
-      private long id;
-      private JiraUser author;
-      private String issueKey;
-      private String issueSummary;
-      private String worklogExplanation;
-      private Date started;
-      private String timeSpent;
-      private int timeSpentSeconds;
+  private long id;
+  private JiraUser author;
+  private String issueKey;
+  private String issueSummary;
+  private String worklogExplanation;
+  private Date started;
+  private String timeSpent;
+  private int timeSpentSeconds;
 }

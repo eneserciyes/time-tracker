@@ -13,7 +13,7 @@ import tr.com.ogedik.commons.model.JiraUser;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamReportsIssue implements BusinessObject {
-    private String key;
-    private String summary;
-    private JiraUser assignee;
+  private String key;
+  private String summary;
+  private JiraUser assignee;
 }

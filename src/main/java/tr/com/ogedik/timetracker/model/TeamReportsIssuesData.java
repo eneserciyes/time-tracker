@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class TeamReportsIssuesData implements BusinessObject {
-    List<TeamReportsIssue> issues;
-    WorklogDoughnutChartData data;
+  List<TeamReportsIssue> issues;
+  WorklogDoughnutChartData data;
 }

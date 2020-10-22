@@ -14,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class WorklogDoughnutChartData implements BusinessObject {
-    private List<String> issueLabels;
-    private List<Integer> totalTimeSpentByIssue;
+  private List<String> issueLabels;
+  private List<Integer> totalTimeSpentByIssue;
 }

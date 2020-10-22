@@ -8,11 +8,11 @@ import tr.com.ogedik.timetracker.model.TeamReportsIssue;
  */
 public class TimeTrackerUtil {
 
-    public static TeamReportsIssue convertIssueToTeamReportsIssue(Issue issue){
-        return TeamReportsIssue.builder().key(issue.getKey())
-                .summary(issue.getFields().getSummary())
-                .assignee(issue.getFields().getAssignee()).build();
-    }
-
-
+  public static TeamReportsIssue convertIssueToTeamReportsIssue(Issue issue) {
+    return TeamReportsIssue.builder()
+        .key(issue.getKey())
+        .summary(issue.getFields().getSummary())
+        .assignee(issue.getFields().getAssignee())
+        .build();
+  }
 }

@@ -23,13 +23,10 @@ import javax.validation.Valid;
 @Controller
 public class TimeTrackerController extends AbstractController {
 
-  @Autowired
-  private WorklogService worklogService;
-  @Autowired
-  private DataRetrievalService dataRetrievalService;
+  @Autowired private WorklogService worklogService;
+  @Autowired private DataRetrievalService dataRetrievalService;
 
   private static final Logger logger = LogManager.getLogger(TimeTrackerController.class);
-
 
   @GetMapping(Services.Path.WORKLOGS)
   public AbstractResponse getWorklogs(
@@ -52,8 +49,8 @@ public class TimeTrackerController extends AbstractController {
   @PutMapping(Services.Path.WORKLOGS)
   public AbstractResponse updateWorklog(@Valid @RequestBody JTTWorklog worklog) {
     return AbstractResponse.build(worklogService.updateWorklog(worklog));
-
   }
+
   @GetMapping(Services.Path.ISSUES_IN_SPRINT)
   public AbstractResponse getIssuesInSprint(@RequestParam String sprintCode) {
     return AbstractResponse.build(dataRetrievalService.getTeamReportsData(sprintCode));
@@ -73,5 +70,4 @@ public class TimeTrackerController extends AbstractController {
   public AbstractResponse getRecentIssues() {
     return AbstractResponse.build(dataRetrievalService.getRecentIssues());
   }
-
 }

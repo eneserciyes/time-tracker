@@ -6,8 +6,11 @@ import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 import tr.com.ogedik.timetracker.model.TeamReportsIssuesData;
 
 public interface DataRetrievalService {
-    TeamReportsIssuesData getTeamReportsData(String sprintCode);
-    BoardsResponse getAllBoards();
-    SprintResponse getSprintsInABoard(String boardId);
-    JQLSearchResult getRecentIssues();
+  TeamReportsIssuesData getTeamReportsData(String sprintCode);
+
+  BoardsResponse getAllBoards();
+
+  SprintResponse getSprintsInABoard(String boardId);
+
+  JQLSearchResult getRecentIssues();
 }
