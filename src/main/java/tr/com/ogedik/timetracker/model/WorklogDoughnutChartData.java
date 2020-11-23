@@ -15,5 +15,5 @@ import java.util.List;
 @Builder
 public class WorklogDoughnutChartData implements BusinessObject {
   private List<String> issueLabels;
-  private List<Integer> totalTimeSpentByIssue;
+  private List<Double> totalTimeSpentByIssue;
 }

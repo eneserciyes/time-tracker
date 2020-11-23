@@ -71,17 +71,19 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
         .collect(Collectors.toList());
   }
 
-  private WorklogDoughnutChartData getWorklogDoughnutChartData(JQLSearchResult searchResult, String sprintCode) {
+  private WorklogDoughnutChartData getWorklogDoughnutChartData(
+      JQLSearchResult searchResult, String sprintCode) {
     if (searchResult.getIssues() == null || searchResult.getIssues().isEmpty()) return null;
     Sprint selectedSprint = integrationProxy.getSprint(sprintCode);
-    int sprintDurationInDays = DateUtils.getWorkingDaysBetweenTwoDates(
-            DateUtils.convertTimelessDateString(selectedSprint.getStartDate().substring(0,10)),
-            DateUtils.convertTimelessDateString(selectedSprint.getEndDate().substring(0,10)));
+    int sprintDurationInDays =
+        DateUtils.getWorkingDaysBetweenTwoDates(
+            DateUtils.convertTimelessDateString(selectedSprint.getStartDate().substring(0, 10)),
+            DateUtils.convertTimelessDateString(selectedSprint.getEndDate().substring(0, 10)));
 
     List<String> issueKeyList =
         searchResult.getIssues().stream().map(Issue::getKey).collect(Collectors.toList());
 
-    List<Integer> totalWorkSpent =
+    List<Double> totalWorkSpent =
         searchResult.getIssues().stream()
             .map(
                 issue ->
@@ -94,9 +96,11 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
                                     selectedSprint.getEndDate()))
                         .map(WorklogRecord::getTimeSpentSeconds)
                         .reduce(0, Integer::sum))
+                .map(e-> (double)e/3600)
             .collect(Collectors.toList());
-    int notLoggedTimeInSeconds = sprintDurationInDays * 8 * 60 * 60 - totalWorkSpent.stream().reduce(0, Integer::sum);
-    if(notLoggedTimeInSeconds > 0){
+    double notLoggedTimeInSeconds =
+        sprintDurationInDays * 8  - totalWorkSpent.stream().reduce(0.0, Double::sum);
+    if (notLoggedTimeInSeconds > 0) {
       issueKeyList.add("Unlogged Time");
       totalWorkSpent.add(notLoggedTimeInSeconds);
     }
