@@ -74,6 +74,9 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
   private WorklogDoughnutChartData getWorklogDoughnutChartData(JQLSearchResult searchResult, String sprintCode) {
     if (searchResult.getIssues() == null || searchResult.getIssues().isEmpty()) return null;
     Sprint selectedSprint = integrationProxy.getSprint(sprintCode);
+    int sprintDurationInDays = DateUtils.getWorkingDaysBetweenTwoDates(
+            DateUtils.convertTimelessDateString(selectedSprint.getStartDate().substring(0,10)),
+            DateUtils.convertTimelessDateString(selectedSprint.getEndDate().substring(0,10)));
 
     List<String> issueKeyList =
         searchResult.getIssues().stream().map(Issue::getKey).collect(Collectors.toList());
@@ -92,7 +95,11 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
                         .map(WorklogRecord::getTimeSpentSeconds)
                         .reduce(0, Integer::sum))
             .collect(Collectors.toList());
-
+    int notLoggedTimeInSeconds = sprintDurationInDays * 8 * 60 * 60 - totalWorkSpent.stream().reduce(0, Integer::sum);
+    if(notLoggedTimeInSeconds > 0){
+      issueKeyList.add("Unlogged Time");
+      totalWorkSpent.add(notLoggedTimeInSeconds);
+    }
     return WorklogDoughnutChartData.builder()
         .issueLabels(issueKeyList)
         .totalTimeSpentByIssue(totalWorkSpent)
