@@ -9,7 +9,7 @@ import tr.com.ogedik.commons.constants.Headers;
 import tr.com.ogedik.commons.constants.Services;
 import tr.com.ogedik.commons.rest.AbstractController;
 import tr.com.ogedik.commons.rest.response.AbstractResponse;
-import tr.com.ogedik.timetracker.model.JTTWorklog;
+import tr.com.ogedik.commons.rest.response.model.JTTWorklog;
 import tr.com.ogedik.timetracker.services.DataRetrievalService;
 import tr.com.ogedik.timetracker.services.WorklogService;
 

@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tr.com.ogedik.commons.rest.request.model.CreateUpdateWorklogRequest;
 import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
+import tr.com.ogedik.commons.rest.response.model.JTTWorklog;
+import tr.com.ogedik.commons.rest.response.model.WorklogContainer;
 import tr.com.ogedik.commons.util.DateUtils;
 import tr.com.ogedik.scrumier.proxy.clients.IntegrationProxy;
-import tr.com.ogedik.timetracker.model.JTTWorklog;
-import tr.com.ogedik.timetracker.model.WorklogContainer;
 
 import java.util.stream.Collectors;
 
@@ -22,9 +22,8 @@ public class WorklogServiceImpl implements WorklogService {
   @Override
   public WorklogContainer retrieveWorklogs(
       String authenticatedUsername, String startDate, String endDate, String isUserOnly) {
-    String username = authenticatedUsername;
     JQLSearchResult searchResult =
-        integrationProxy.getIssuesWithWorklogs(username, startDate, endDate);
+        integrationProxy.getIssuesWithWorklogs(authenticatedUsername, startDate, endDate);
 
     WorklogContainer worklogContainer = new WorklogContainer();
 

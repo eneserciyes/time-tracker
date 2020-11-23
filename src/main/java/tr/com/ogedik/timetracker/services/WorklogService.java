@@ -1,7 +1,7 @@
 package tr.com.ogedik.timetracker.services;
 
-import tr.com.ogedik.timetracker.model.JTTWorklog;
-import tr.com.ogedik.timetracker.model.WorklogContainer;
+import tr.com.ogedik.commons.rest.response.model.JTTWorklog;
+import tr.com.ogedik.commons.rest.response.model.WorklogContainer;
 
 public interface WorklogService {
   WorklogContainer retrieveWorklogs(
