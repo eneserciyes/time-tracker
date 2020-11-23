@@ -22,8 +22,9 @@ public class WorklogServiceImpl implements WorklogService {
   @Override
   public WorklogContainer retrieveWorklogs(
       String authenticatedUsername, String startDate, String endDate, String isUserOnly) {
+    String username = authenticatedUsername;
     JQLSearchResult searchResult =
-        integrationProxy.getIssuesWithWorklogs(authenticatedUsername, startDate, endDate);
+        integrationProxy.getIssuesWithWorklogs(username, startDate, endDate);
 
     WorklogContainer worklogContainer = new WorklogContainer();
 
