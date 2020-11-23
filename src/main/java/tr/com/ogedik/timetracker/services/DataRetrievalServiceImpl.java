@@ -45,7 +45,7 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
                 IssueFields.SUMMARY));
     return TeamReportsIssuesData.builder()
         .issues(getIssuesInASprint(searchResult))
-        .data(getWorklogDoughnutChartData(searchResult))
+        .data(getWorklogDoughnutChartData(searchResult, sprintCode))
         .build();
   }
 
@@ -71,9 +71,9 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
         .collect(Collectors.toList());
   }
 
-  private WorklogDoughnutChartData getWorklogDoughnutChartData(JQLSearchResult searchResult) {
+  private WorklogDoughnutChartData getWorklogDoughnutChartData(JQLSearchResult searchResult, String sprintCode) {
     if (searchResult.getIssues() == null || searchResult.getIssues().isEmpty()) return null;
-    Sprint selectedSprint = searchResult.getIssues().get(0).getFields().getSprint();
+    Sprint selectedSprint = integrationProxy.getSprint(sprintCode);
 
     List<String> issueKeyList =
         searchResult.getIssues().stream().map(Issue::getKey).collect(Collectors.toList());
