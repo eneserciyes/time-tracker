@@ -3,23 +3,21 @@ package tr.com.ogedik.timetracker.services;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tr.com.ogedik.commons.constants.Configs;
 import tr.com.ogedik.commons.constants.IssueFields;
 import tr.com.ogedik.commons.expection.ErrorException;
 import tr.com.ogedik.commons.expection.constants.CommonErrorType;
 import tr.com.ogedik.commons.rest.response.BoardsResponse;
 import tr.com.ogedik.commons.rest.response.SprintResponse;
-import tr.com.ogedik.commons.rest.response.model.Issue;
-import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
-import tr.com.ogedik.commons.rest.response.model.Sprint;
-import tr.com.ogedik.commons.rest.response.model.WorklogRecord;
+import tr.com.ogedik.commons.rest.response.model.*;
 import tr.com.ogedik.commons.util.DateUtils;
 import tr.com.ogedik.scrumier.proxy.clients.IntegrationProxy;
 import tr.com.ogedik.timetracker.TimeTrackerUtil;
-import tr.com.ogedik.timetracker.model.TeamReportsIssue;
-import tr.com.ogedik.timetracker.model.TeamReportsIssuesData;
-import tr.com.ogedik.timetracker.model.WorklogDoughnutChartData;
+import tr.com.ogedik.timetracker.model.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /*
@@ -63,6 +61,40 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
   public JQLSearchResult getRecentIssues() {
     return integrationProxy.getRecentIssues();
   }
+
+  @Override
+  public IndividualReportsData getIndividualReportsData(WorklogContainer container, String startDate, String endDate) {
+
+    Map<String, Float> authorLoggedMap = new HashMap<>();
+    Map<String, String> authorKeyNameMap = new HashMap<>();
+    for (JTTWorklog worklog : container.getWorklogs()){
+      String authorKey = worklog.getAuthor().getKey();
+      authorKeyNameMap.putIfAbsent(authorKey, worklog.getAuthor().getDisplayName());
+
+      float worklogHours = (float)worklog.getTimeSpentSeconds()/3600;
+
+      if(authorLoggedMap.containsKey(authorKey)){
+        float currentLoggedHours = authorLoggedMap.get(authorKey);
+        authorLoggedMap.put(authorKey, currentLoggedHours + worklogHours);
+      } else {
+        authorLoggedMap.putIfAbsent(authorKey, worklogHours);
+      }
+    }
+
+    int intervalWorkingHours = DateUtils.getWorkingDaysBetweenTwoDates(DateUtils.convertTimelessDateString(startDate),
+            DateUtils.convertTimelessDateString(endDate)) * Configs.WORKING_HOURS;
+
+    IndividualReportsData individualReportsData = new IndividualReportsData();
+    for(Map.Entry<String, Float> entry: authorLoggedMap.entrySet()){
+      individualReportsData.addEntry(new IndividualReportEntry(
+              authorKeyNameMap.get(entry.getKey()),
+              (int)((entry.getValue()/intervalWorkingHours)*100)
+              ,entry.getValue())
+      );
+    }
+    return individualReportsData;
+  }
+
 
   private List<TeamReportsIssue> getIssuesInASprint(JQLSearchResult searchResult) {
 

@@ -70,4 +70,17 @@ public class TimeTrackerController extends AbstractController {
   public AbstractResponse getRecentIssues() {
     return AbstractResponse.build(dataRetrievalService.getRecentIssues());
   }
+
+  @GetMapping(Services.Path.INDIVIDUAL_REPORT)
+  public AbstractResponse getIndividualReports(
+          @RequestHeader(value = Headers.AUTH_USER) String authenticatedUsername,
+          @RequestParam String startDate,
+          @RequestParam String endDate){
+
+    return AbstractResponse.build(dataRetrievalService.getIndividualReportsData(
+            worklogService.retrieveWorklogs(authenticatedUsername, startDate, endDate, "false"),
+            startDate,
+            endDate
+    ));
+  }
 }
