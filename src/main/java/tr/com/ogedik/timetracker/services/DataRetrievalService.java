@@ -4,6 +4,7 @@ import tr.com.ogedik.commons.rest.response.BoardsResponse;
 import tr.com.ogedik.commons.rest.response.SprintResponse;
 import tr.com.ogedik.commons.rest.response.model.JQLSearchResult;
 import tr.com.ogedik.commons.rest.response.model.WorklogContainer;
+import tr.com.ogedik.timetracker.model.DailyChartData;
 import tr.com.ogedik.timetracker.model.IndividualReportsData;
 import tr.com.ogedik.timetracker.model.TeamReportsIssuesData;
 
@@ -16,5 +17,7 @@ public interface DataRetrievalService {
 
   JQLSearchResult getRecentIssues();
 
-  IndividualReportsData getIndividualReportsData(WorklogContainer aTrue, String startDate, String endDate);
+  IndividualReportsData getIndividualReportsData(WorklogContainer container, String startDate, String endDate);
+
+  DailyChartData getDailyChartsData(WorklogContainer container);
 }

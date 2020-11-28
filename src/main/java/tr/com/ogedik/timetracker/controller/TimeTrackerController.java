@@ -73,14 +73,24 @@ public class TimeTrackerController extends AbstractController {
 
   @GetMapping(Services.Path.INDIVIDUAL_REPORT)
   public AbstractResponse getIndividualReports(
-          @RequestHeader(value = Headers.AUTH_USER) String authenticatedUsername,
-          @RequestParam String startDate,
-          @RequestParam String endDate){
+      @RequestHeader(value = Headers.AUTH_USER) String authenticatedUsername,
+      @RequestParam String startDate,
+      @RequestParam String endDate) {
 
-    return AbstractResponse.build(dataRetrievalService.getIndividualReportsData(
+    return AbstractResponse.build(
+        dataRetrievalService.getIndividualReportsData(
             worklogService.retrieveWorklogs(authenticatedUsername, startDate, endDate, "false"),
             startDate,
-            endDate
-    ));
+            endDate));
+  }
+
+  @GetMapping(Services.Path.DAILY_CHART)
+  public AbstractResponse getDailyChart(
+      @RequestHeader(value = Headers.AUTH_USER) String authenticatedUsername,
+      @RequestParam String startDate,
+      @RequestParam String endDate) {
+    return AbstractResponse.build(
+        dataRetrievalService.getDailyChartsData(
+            worklogService.retrieveWorklogs(authenticatedUsername, startDate, endDate, "false")));
   }
 }

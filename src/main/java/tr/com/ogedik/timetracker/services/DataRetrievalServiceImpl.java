@@ -7,6 +7,7 @@ import tr.com.ogedik.commons.constants.Configs;
 import tr.com.ogedik.commons.constants.IssueFields;
 import tr.com.ogedik.commons.expection.ErrorException;
 import tr.com.ogedik.commons.expection.constants.CommonErrorType;
+import tr.com.ogedik.commons.model.JiraUser;
 import tr.com.ogedik.commons.rest.response.BoardsResponse;
 import tr.com.ogedik.commons.rest.response.SprintResponse;
 import tr.com.ogedik.commons.rest.response.model.*;
@@ -15,6 +16,7 @@ import tr.com.ogedik.scrumier.proxy.clients.IntegrationProxy;
 import tr.com.ogedik.timetracker.TimeTrackerUtil;
 import tr.com.ogedik.timetracker.model.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +95,29 @@ public class DataRetrievalServiceImpl implements DataRetrievalService {
       );
     }
     return individualReportsData;
+  }
+
+  @Override
+  public DailyChartData getDailyChartsData(WorklogContainer container) {
+    Map<String, List<Double>> authorWorklogsMap = new HashMap<>();
+    Map<String, JiraUser> authorKeyUserMap = new HashMap<>();
+    for (JTTWorklog worklog : container.getWorklogs()) {
+      String authorKey = worklog.getAuthor().getKey();
+      authorKeyUserMap.putIfAbsent(authorKey, worklog.getAuthor());
+
+      double worklogHours = (double) worklog.getTimeSpentSeconds() / 3600;
+      if (authorWorklogsMap.containsKey(authorKey)) {
+        authorWorklogsMap.get(authorKey).add(worklogHours);
+      } else {
+        List<Double> dailyWorklogData = new ArrayList<>();
+        dailyWorklogData.add(worklogHours);
+        authorWorklogsMap.putIfAbsent(authorKey, dailyWorklogData);
+      }
+    }
+
+    DailyChartData dailyChartData = new DailyChartData();
+    //TODO: Change this implementation to get only the dailyChartData for a specific user.
+    return dailyChartData;
   }
 
 
